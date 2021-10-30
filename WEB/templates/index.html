@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>GEN TA SECURITE</title>
+    <link rel="stylesheet" href="{{ stylesgeneral }}">
+    <link rel="stylesheet" href="{{ stylesselection }}">
+</head>
+<body>
+<form method="POST" class="generatorweb">
+    <table align="center">
+        <tr>
+            <td>
+                <textarea id="GENERATOR-STRING" readonly>{{ extract }}</textarea>
+            </td>
+            <td>
+                <input type="button" value="COPY" id="btn-copy" onclick="copy_to_clipboard('GENERATOR-STRING')">
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <ul>
+                    {% for x, y in zip(labellist, namelist) %}
+                    <li>
+                        <input id="s1d" type="checkbox" class="switch" name="{{ y }}" data-clipboard-target="#GENERATOR-STRING" checked>
+                        <label for="s1d">{{ x }}</label>
+                    </li>
+                    {% endfor %}
+                </ul>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <input id="t1d" type="text" name="selector-1" value="{{ leng }}" data-clipboard-target="#GENERATOR-STRING">
+                <label for="t1d">LENG</label>
+            </td>
+        </tr>
+        <br>
+        <tr>
+            <td>
+                <button type="submit" id="submit"
+                        data-clipboard-target="#GENERATOR-STRING">GENERATE</button>
+            </td>
+        </tr>
+    </table>
+</form>
+
+</body>
+<script>
+function copy_to_clipboard(btn-copy)
+{
+    document.getElementById(GENERATOR-STRING).select();
+    document.execCommand('copy');
+}
+</script>
+</html>

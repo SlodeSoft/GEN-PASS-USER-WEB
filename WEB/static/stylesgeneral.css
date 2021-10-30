@@ -1,0 +1,32 @@
+html, body {
+  height: 100%;
+}
+body {
+  background: 	#181818;
+  background-size: 100%;
+  font-family: Calibri;
+  front-color: 	#00FF00;
+}
+
+textarea {
+  color: 	#00FF00;
+  resize: inline;
+  overflow: hidden;
+  font-size: 40px;
+  background: transparent;
+  }
+
+input {
+  background: #181818;
+  color: 	#00FF00;
+}
+label {
+  background: #181818;
+  color: 	#00FF00;
+  font-weight: bold;
+}
+button {
+  background: #181818;
+  color: 	#00FF00;
+  font-weight: bold;
+}
