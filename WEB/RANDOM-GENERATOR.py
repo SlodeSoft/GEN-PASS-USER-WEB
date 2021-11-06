@@ -2,6 +2,7 @@ import RandomPassword as Rdm
 import os.path
 import re
 from lib import WEBTOMYSQL as CONNEC
+from lib import SECRET as SCRT
 from flask import Flask, render_template, request, session, redirect, url_for
 
 __STATIC_DIR = os.path.abspath('./static')
@@ -19,6 +20,8 @@ class CONNECTION:
 
 
 bddcon = CONNECTION()
+set_key = SCRT.__quatre__.__entry__.password
+set_iv = SCRT.__cinq__.__entry__.password
 
 
 class GENERATOR:
@@ -31,8 +34,6 @@ class GENERATOR:
                                                              include_upper_case_alphabets=uppcase)
 
 
-# gen = GENERATOR(20, True, True, True, True)
-
 @app.route('/', methods=['GET', 'POST'])
 def login():
     if request.method == 'GET':
@@ -44,7 +45,13 @@ def login():
         username = request.form['username']
         password = request.form['password']
         # Check if account exists using MySQL
-        bddcon.cursor.execute('SELECT * FROM accounts WHERE username = %s AND password = %s', (username, password))
+
+        sql = 'CALL `SELECT_CRYPT_USER_INFO`(%s, %s, %s, %s)'
+        values = (set_key,
+                  set_iv,
+                  username,
+                  password)
+        bddcon.cursor.execute(sql, values)
         # Fetch one record and return result
         account = bddcon.cursor.fetchone()
         if account:
@@ -83,7 +90,11 @@ def register():
         password = request.form['password']
         email = request.form['email']
         # Check if account exists using MySQL
-        bddcon.cursor.execute('SELECT * FROM accounts WHERE username = %s', username)
+        sql = "CALL `SELECT_REGISTRY_USER`(%s, %s, %s)"
+        values = (set_key,
+                  set_iv,
+                  username)
+        bddcon.cursor.execute(sql, values)
         account = bddcon.cursor.fetchone()
         # If account exists show error and validation checks
         if account:
@@ -96,10 +107,13 @@ def register():
         elif not username or not password or not email:
             msg = 'Please fill out the form!'
         else:
-            print(username, password, email)
             # Account doesnt exists and the form data is valid, now insert new account into accounts table
-            sql = 'INSERT INTO accounts (username, password, email) VALUES (%s, %s, %s)'
-            values = (username, password, email)
+            sql = "CALL `INSERT_CRYPT_USER_INFO`(%s, %s, %s, %s, %s)"
+            values = (set_key,
+                      set_iv,
+                      username,
+                      password,
+                      email)
             bddcon.cursor.execute(sql, values)
             bddcon.cursor.connection.commit()
             msg = 'You have successfully registered!'
